@@ -1,0 +1,37 @@
+{
+  "name": "libnotify-ffi",
+  "version": "0.1.0",
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "description": "Low and high level access to libnotify through node-ffi (Foreign Function Interface).",
+  "main": "lib/libnotify.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "ffi": "^2.0.0",
+    "ref": "^1.2.0",
+    "ref-struct": "^1.0.2"
+  },
+  "devDependencies": {
+    "expect.js": "^0.3.1",
+    "jshint": "^2.5.6",
+    "mocha": "^1.21.4"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cronvel/libnotify-ffi.git"
+  },
+  "keywords": [
+    "libnotify"
+  ],
+  "author": "Cédric Ronvel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cronvel/libnotify-ffi/issues"
+  }
+}
