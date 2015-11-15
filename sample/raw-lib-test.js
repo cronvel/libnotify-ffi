@@ -85,7 +85,7 @@ console.log( 'notify_notification_new():' , notif ) ;
 var gerror = ref.NULL.ref() ;
 console.log( 'gerror:' , gerror ) ;
 
-libnotify.lib.notify_notification_set_urgency( notif , 2 ) ;
+libnotify.lib.notify_notification_set_urgency( notif , 1 ) ;
 
 
 // Create the main loop, usefull to get response from the user
