@@ -108,11 +108,6 @@ var myCallback = function( notification , action , userDataPtr_ )
 	setTimeout( function() {} , 1000 ) ;
 } ;
 
-var freeCallback = function( pointer )
-{
-	console.log( '\n\nfreeCallback: ' , arguments , '\n\n' ) ;
-} ;
-
 var userData = { one: 1 , two: 2 } ;
 var userDataPtr = ref.alloc( 'Object' , userData ) ;
 var ObjectPtr = ref.refType( 'Object' ) ;
@@ -123,12 +118,12 @@ console.log( 'userDataPtr.deref():' , userDataPtr.deref() ) ;
 
 //libnotify.lib.notify_notification_add_action( notif , 'ok' , 'ok!' , myCallback , userDataPtr , freeCallback ) ;
 
-libnotify.lib.notify_notification_add_action( notif , 'ok' , 'ok!' , myCallback , userDataPtr , freeCallback ) ;
-libnotify.lib.notify_notification_add_action( notif , 'nope' , 'nope!' , myCallback , userDataPtr , freeCallback ) ;
-libnotify.lib.notify_notification_add_action( notif , 'never' , 'never!' , myCallback , userDataPtr , freeCallback ) ;
+libnotify.lib.notify_notification_add_action( notif , 'ok' , 'ok!' , myCallback , userDataPtr , null ) ;
+libnotify.lib.notify_notification_add_action( notif , 'nope' , 'nope!' , myCallback , userDataPtr , null ) ;
+libnotify.lib.notify_notification_add_action( notif , 'never' , 'never!' , myCallback , userDataPtr , null ) ;
 
 // action = default is a special case: this is what we get when the notif is clicked (not a button)
-libnotify.lib.notify_notification_add_action( notif , 'default' , 'default' , myCallback , userDataPtr , freeCallback ) ;
+libnotify.lib.notify_notification_add_action( notif , 'default' , 'default' , myCallback , userDataPtr , null ) ;
 
 
 
@@ -138,6 +133,27 @@ console.log( 'notify_notification_show():' , ret ) ;
 console.log( 'gerror:' , gerror ) ;
 
 
+//*
+var proxy = libnotify.lib.g_dbus_proxy_new_for_bus_sync(
+	2 ,
+	1 ,
+	ref.NULL ,
+	"org.freedesktop.Notifications" ,
+	"/org/freedesktop/Notifications" ,
+	"org.freedesktop.Notifications" ,
+	ref.NULL ,
+	gerror
+) ;
+
+console.log( "g_dbus_proxy_new_for_bus_sync():" , proxy , gerror ) ;
+
+var proxyCb = function()
+{
+	console.log( "\n>>> proxyCb:" , arguments ) ;
+} ;
+
+var handler = libnotify.lib.g_signal_connect_object( proxy , "g-signal" , proxyCb , notif , 0 ) ;
+//*/
 
 // Without this, we can't get the action callback triggered, even if we setTimeout().
 // This is a blocking call.
