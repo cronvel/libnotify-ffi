@@ -192,5 +192,33 @@ of *libnotify-ffi*, but a bug of Gnome itself (actions are correctly pushed to D
 
 
 
+#### Notification#push( [options] , [finishCallback] ) 
+
+* options `Object` (optional) an object of options, where:
+	* timeout `number` the timeout in ms before giving up
+* finishCallback `Function` (optional) a callback that will be triggered when the notification will go away
+
+This will send the notification to the notification server and display it.
+
+
+
+#### Notification#show( [options] , [finishCallback] )
+
+Alias of *Notification#push()*. It exists only to be compliant with libnotify terminology.
+
+
+
+#### Notification#close()
+
+This close the notification right now.
+
+
+
+## Limitations
+
+There are many things broken by design in the *org.freedesktop.Notifications* spec, in notification server implementation
+and in the *libnotify* lib itself.
+
+(TODO)
 
 
