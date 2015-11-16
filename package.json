@@ -11,8 +11,7 @@
   },
   "dependencies": {
     "ffi": "^2.0.0",
-    "ref": "^1.2.0",
-    "ref-struct": "^1.0.2"
+    "ref": "^1.2.0"
   },
   "devDependencies": {
     "expect.js": "^0.3.1",

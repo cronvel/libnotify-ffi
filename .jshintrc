@@ -20,7 +20,7 @@
 	
 	// Style
 	"indent" : 4, // Specify indentation spacing
-	"camelcase" : true,
+	"camelcase" : false,
 	// "maxlen" : 120,
 	"curly" : true,
 	"newcap" : true, // Require capitalization of all constructor functions e.g. `new F()`.

@@ -52,7 +52,8 @@ var notif = libnotify.createNotification( {
 	timeout: 0 ,
 	appName: 'bill app' ,
 	category: 'idk' ,
-	iconPath: __dirname + '/log.png' ,
+	//iconPath: __dirname + '/log.png' ,
+	iconPath: 'appointment-new' ,
 	//*
 	actions: {
 		'default': {
