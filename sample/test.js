@@ -53,6 +53,7 @@ var notif = libnotify.createNotification( {
 	appName: 'bill app' ,
 	category: 'idk' ,
 	iconPath: __dirname + '/log.png' ,
+	//*
 	actions: {
 		'default': {
 			callback: function() { console.log( 'Default action!' ) ; }
@@ -65,12 +66,35 @@ var notif = libnotify.createNotification( {
 			callback: function() { console.log( '"OK" was clicked!' ) ; }
 		}
 	}
+	//*/
 } ) ;
 
 notif.push( function() {
 	console.log( 'Notification closed!' ) ;
 } ) ;
 
-notif.close() ;
+//notif.close() ;
+
+setTimeout( function() {
+	notif.update( {
+		summary: '!!!' ,
+		//iconPath: __dirname + '/log.png' ,
+		//*
+		actions: {
+			'default': {
+				callback: function() { console.log( 'Default action!' ) ; }
+			} ,
+			'close': {
+				callback: function() { console.log( 'Close action!' ) ; }
+			} ,
+			'ok': {
+				label: 'OK!' ,
+				callback: function() { console.log( '"OK" was clicked!' ) ; }
+			}
+		}
+		//*/
+	} ) ;
+} , 2000 ) ;
+
 
 return ;
