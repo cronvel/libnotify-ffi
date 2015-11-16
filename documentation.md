@@ -127,7 +127,68 @@ Returns an object containing server info, where:
 
 
 
+#### .createNotification( data )
 
+* data `Object` contains the data of the notification, where:
+	* summary `string` the title/summary of the notification
+	* body `string` the body of the notification, supporting HTML tags `<b>`, `<i>` and `<u>`
+	* iconPath `string` (optional) either a full path to an image, or a stock image existing on your desktop environment
+	* urgency `mixed` (optional, default to 1/*normal*) this is the urgency level for this notification, the value can be:
+		* 0/*low*
+		* 1/*normal*
+		* 2/*critical* (critical notification does not timeout)
+	* timeout `number` (optional) the timeout before the notification disappears in *ms* (rarely implemented by notification servers)
+	* appName `string` (optional) override the global libnotify application name
+	* category `string` (optional) a category name, **NOT** displayed, probably useful for the notification server but not mandatory.
+	  Most probably some notification servers will provide filters to users somewhere in the future, and this category would be
+	  used for that.
+	* actions `Object` an object of actions, where:
+		* default `Object` object containing a callback to be triggered when the user click the notification, but not any button:
+			* callback `Function` the callback to trigger if the action occurs
+		* close `Object` object containing a callback to be triggered when the user close the notification, either by clicking
+		  the close button or by clicking the notification itself if there is no *default* callback registered:
+			* callback `Function` the callback to trigger if the action occurs
+		* *anything else* `Object` object containing a button to attach to the notification and a callback:
+			* label `string` the label of the button to create
+			* callback `Function` the callback to trigger if the action occurs
+
+It returns a `libnotify.Notification` instance.
+
+
+
+### Notification Class
+
+#### Notification#update( data )
+
+* data `Object` contains the data of the notification, where:
+	* summary `string` the title/summary of the notification
+	* body `string` the body of the notification, supporting HTML tags `<b>`, `<i>` and `<u>`
+	* iconPath `string` (optional) either a full path to an image, or a stock image existing on your desktop environment
+	* urgency `mixed` (optional, default to 1/*normal*) this is the urgency level for this notification, the value can be:
+		* 0/*low*
+		* 1/*normal*
+		* 2/*critical* (critical notification does not timeout)
+	* timeout `number` (optional) the timeout before the notification disappears in *ms* (rarely implemented by notification servers)
+	* appName `string` (optional) override the global libnotify application name
+	* category `string` (optional) a category name, **NOT** displayed, probably useful for the notification server but not mandatory.
+	  Most probably some notification servers will provide filters to users somewhere in the future, and this category would be
+	  used for that.
+	* actions `Object` an object of actions, where:
+		* default `Object` object containing a callback to be triggered when the user click the notification, but not any button:
+			* callback `Function` the callback to trigger if the action occurs
+		* close `Object` object containing a callback to be triggered when the user close the notification, either by clicking
+		  the close button or by clicking the notification itself if there is no *default* callback registered:
+			* callback `Function` the callback to trigger if the action occurs
+		* *anything else* `Object` object containing a button to attach to the notification and a callback:
+			* label `string` the label of the button to create
+			* callback `Function` the callback to trigger if the action occurs
+
+Update the notification.
+
+If the notification has been already pushed, it attempts to modify it.
+
+**Note:** some server like Gnome will lose all action buttons when updating a notification already pushed. This is not a bug
+of *libnotify-ffi*, but a bug of Gnome itself (actions are correctly pushed to DBus).
 
 
 
