@@ -83,7 +83,7 @@ One of the four action callbacks will be triggered, then the `.push()` callback.
 
 ## Method reference - High-level API
 
-#### .init( appName )
+### .init( appName )
 
 * appName `string` (optional) the name of the application, default to libnotify-ffi
 
@@ -94,14 +94,14 @@ The application name is **NOT** displayed, but the notification server needs it 
 
 
 
-#### .reset()
+### .reset()
 
 This method will reset (de-init) *libnotify*.
 Useful only if you will never send notifications anymore.
 
 
 
-#### .setAppName( appName )
+### .setAppName( appName )
 
 * appName `string` (optional) the name of the application, default to libnotify-ffi
 
@@ -110,13 +110,13 @@ The application name is **NOT** displayed.
 
 
 
-#### .getAppName()
+### .getAppName()
 
 This will get the application name currently configured.
 
 
 
-#### .getServerInfo()
+### .getServerInfo()
 
 Returns an object containing server info, where:
 
@@ -127,7 +127,7 @@ Returns an object containing server info, where:
 
 
 
-#### .createNotification( data )
+### .createNotification( data )
 
 * data `Object` contains the data of the notification, where:
 	* summary `string` the title/summary of the notification
@@ -156,9 +156,9 @@ It returns a `libnotify.Notification` instance.
 
 
 
-### Notification Class
+## Notification Class
 
-#### Notification#update( data )
+### Notification#update( data )
 
 * data `Object` contains the data of the notification, where:
 	* summary `string` the title/summary of the notification
@@ -192,7 +192,7 @@ of *libnotify-ffi*, but a bug of Gnome itself (actions are correctly pushed to D
 
 
 
-#### Notification#push( [options] , [finishCallback] ) 
+### Notification#push( [options] , [finishCallback] ) 
 
 * options `Object` (optional) an object of options, where:
 	* timeout `number` the timeout in ms before giving up
@@ -202,13 +202,13 @@ This will send the notification to the notification server and display it.
 
 
 
-#### Notification#show( [options] , [finishCallback] )
+### Notification#show( [options] , [finishCallback] )
 
 Alias of *Notification#push()*. It exists only to be compliant with libnotify terminology.
 
 
 
-#### Notification#close()
+### Notification#close()
 
 This close the notification right now.
 
