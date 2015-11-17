@@ -275,9 +275,6 @@ been timed out and dismissed by the notification server itself.
 Having a button triggering action callback **MUST** imply a timeout callback mechanism...
 Sadly nothing changed for years in the spec.
 
-Also *libnotify* itself does not expose the event produced by the user closing the notification, but *libnotify-ffi* managed to
-get that information by spawning its own proxy to DBus.
-
 Worse: *libnotify* does not provide an easy way to get our callback response *out of the box*. Internally, *libnotify-ffi* has
 to play catch with some low-level gnome API to spawn a **BLOCKING** *g_main_loop*: **it is done in another thread so we do not
 actually block anything**.
