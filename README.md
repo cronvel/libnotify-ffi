@@ -262,7 +262,7 @@ This close the notification right now.
 
 Sending a notification in a *fire and forget* fashion works pretty well.
 
-However, advanced feature like button with action callback are utterly broken by design in the *org.freedesktop.Notifications* spec,
+However, advanced feature like buttons with action callback are utterly broken by design in the *org.freedesktop.Notifications* spec,
 in notification server implementation and ultimately in the *libnotify* lib itself.
 
 **In fact there is absolutely no mechanism signaling notification expiration**. That's it: the notification server can tell you if 
@@ -270,8 +270,10 @@ the user clicked the notification, if a particular button is clicked, or if the 
 HAS TIMED OUT YOUR NOTIFICATION!!!** For *fire and forget* it's not important, but if you want to send notifications with buttons,
 that's a real problem: as time pass without any callback triggered, how do we know if the notification is still displayed and
 the user is simply away from keyboard (thus an action callback has still a chance to be triggered) or if the notification has
-been timed out and dismissed by the notification server itself. Having a button triggering action callback **DOES** imply a callback
-for timeout.
+been timed out and dismissed by the notification server itself.
+
+Having a button triggering action callback **MUST** imply a timeout callback mechanism...
+Sadly nothing changed for years in the spec.
 
 Also *libnotify* itself does not expose the event produced by the user closing the notification, but *libnotify-ffi* managed to
 get that information by spawning its own proxy to DBus.
