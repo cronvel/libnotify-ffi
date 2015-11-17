@@ -17,7 +17,7 @@ This module loads the dynamic library (libnotify.so) and provides bindings for i
 
 ## Getting started!
 
-This lib is super simple to use, here is the most most common use-case:
+This lib is super simple to use, here is the most common use-case:
 
 ```js
 var libnotify = require( 'libnotify-ffi' ) ;
@@ -103,7 +103,7 @@ One of the four action callbacks will be triggered, then the `.push()` callback.
 <a name="ref.init"></a>
 ### .init( appName )
 
-* appName `string` (optional) the name of the application, default to libnotify-ffi
+* appName `string` (optional) the name of the application, default to *'libnotify-ffi'*
 
 This method will init *libnotify* with the given application name.
 The application name is **NOT** displayed, but the notification server needs it for some reason.
@@ -123,9 +123,9 @@ Useful only if you will never send notifications anymore.
 <a name="ref.setAppName"></a>
 ### .setAppName( appName )
 
-* appName `string` (optional) the name of the application, default to libnotify-ffi
+* appName `string` (non-empty) the name of the application
 
-This will set the given application name.
+This will configure the application name.
 The application name is **NOT** displayed.
 
 
@@ -287,16 +287,21 @@ So you should be aware that:
 * if you use the lib in the *fire and forget* mode, you are totally safe: it's fast and reliable
 * as soon as you define *one* action callback or even call `Notification#push()` with the *finishCallback*, you are not in the
   trivial *fire and forget* mode anymore
-* when not in *fire and forget* mode, each notification you send create a new thread (that's still faster than other node libraries
-  that spawn a whole brand new process to exec *notify-send* program, also those libraries does not have the action callback features
-  anyway...)
+* when not in *fire and forget* mode, each notification you send creates a new thread (that's still faster than other node libraries
+  that spawn a whole brand new process to exec the *notify-send* program, also those libraries does not have the action callback
+  features anyway...)
 * as soon as you add *one* button to your notification, **the urgency level is forced to 'critical'**, because critical notifications
   *SHOULD* not expire (however, that's depend on the server implementation)
 * because we can't detect notification expiration, *libnotify-ffi* assumes by default that the notification has expired after 10s 
   for *'low'* and *'normal'* urgency notification, and after 60s for *'critical'* notification: this is important to avoid leaking
-  thread like hell. However this can be overridden by setting `options.timeout` to the appropriate value as the first argument
+  threads like hell. However this can be overridden by setting `options.timeout` to the appropriate value as the first argument
   of `Notification#push()`.
 * you can update a *living* notification (i.e: a notification currently displayed), but some server (e.g. Gnome) will remove
   any existing buttons or buttons about to be created (despite the fact that actions are correctly pushed to DBus)...
-  so you would probably want to close the notification and create a brand new one if that notification involve buttons.
+  so you would probably want to close the notification and create a brand new one if that notification involves buttons.
 
+
+
+## License
+
+MIT License. See the `LICENSE` file.
