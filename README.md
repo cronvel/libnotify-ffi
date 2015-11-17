@@ -81,8 +81,26 @@ One of the four action callbacks will be triggered, then the `.push()` callback.
 
 
 
-## Method reference - High-level API
+## API reference
 
+Table of content:
+
+* [.init()](#ref.init)
+* [.reset()](#ref.reset)
+* [.setAppName()](#ref.setAppName)
+* [.getAppName()](#ref.getAppName)
+* [.getServerInfo()](#ref.getServerInfo)
+* [.createNotification()](#ref.createNotification)
+* [The Notification class](#ref.notification)
+	* [.update()](#ref.notification.update)
+	* [.push()](#ref.notification.push)
+	* [.show()](#ref.notification.show)
+	* [.close()](#ref.notification.close)
+* [Limitations](#ref.limitations)
+
+
+
+<a name="ref.init"></a>
 ### .init( appName )
 
 * appName `string` (optional) the name of the application, default to libnotify-ffi
@@ -94,6 +112,7 @@ The application name is **NOT** displayed, but the notification server needs it 
 
 
 
+<a name="ref.reset"></a>
 ### .reset()
 
 This method will reset (de-init) *libnotify*.
@@ -101,6 +120,7 @@ Useful only if you will never send notifications anymore.
 
 
 
+<a name="ref.setAppName"></a>
 ### .setAppName( appName )
 
 * appName `string` (optional) the name of the application, default to libnotify-ffi
@@ -110,12 +130,14 @@ The application name is **NOT** displayed.
 
 
 
+<a name="ref.getAppName"></a>
 ### .getAppName()
 
 This will get the application name currently configured.
 
 
 
+<a name="ref.getServerInfo"></a>
 ### .getServerInfo()
 
 Returns an object containing server info, where:
@@ -127,6 +149,7 @@ Returns an object containing server info, where:
 
 
 
+<a name="ref.createNotification"></a>
 ### .createNotification( data )
 
 * data `Object` contains the data of the notification, where:
@@ -152,12 +175,18 @@ Returns an object containing server info, where:
 			* label `string` the label of the button to create
 			* callback `Function` the callback to trigger if the action occurs
 
-It returns a `libnotify.Notification` instance.
+It creates and returns a `Notification` object.
 
 
 
+<a name="ref.notification"></a>
 ## Notification Class
 
+Instances of this *class* represent a notification to be sent.
+
+
+
+<a name="ref.notification.update"></a>
 ### Notification#update( data )
 
 * data `Object` contains the data of the notification, where:
@@ -188,37 +217,83 @@ Update the notification.
 If the notification has been already pushed, it attempts to modify it.
 
 **Note:** some server like Gnome will lose all action buttons when updating a notification already pushed. This is not a bug
-of *libnotify-ffi*, but a bug of Gnome itself (actions are correctly pushed to DBus).
+of *libnotify-ffi*, but a bug of Gnome itself (actions are correctly pushed to DBus). See [limitations](#ref.limitations).
 
 
 
+<a name="ref.notification.push"></a>
 ### Notification#push( [options] , [finishCallback] ) 
 
 * options `Object` (optional) an object of options, where:
 	* timeout `number` the timeout in ms before giving up
-* finishCallback `Function` (optional) a callback that will be triggered when the notification will go away
+* finishCallback `Function` (optional) a callback that will be triggered when the notification will be dismissed
 
-This will send the notification to the notification server and display it.
+This will send the notification to the notification server so it will be displayed as soon as possible, usually as soon as
+the previous notification is dismissed. This is totally dependent to your desktop environment (some implementation may
+allow multiple notifications at the same time, but as far as I know, there is no desktop doing that at the moment).
+
+If you define a *finishCallback*, please be aware of [the limitations of the lib](#ref.limitations).
+
+The *timeout* option defines a period of time after which the notification should be assumed to have timed out.
+This exists because the notification server never send any event when a notification has actually timed out.
+Again, see [the limitations of the lib](#ref.limitations) to understand what happens behind the scene.
 
 
 
+<a name="ref.notification.show"></a>
 ### Notification#show( [options] , [finishCallback] )
 
-Alias of *Notification#push()*. It exists only to be compliant with libnotify terminology.
+Alias of *Notification#push()*. Only exists to be consistent with the *libnotify* terminology. 
+
+This verb is very misleading because it implies that the notification would be displayed right know, which is not always true.
+You are encouraged to use *Notification#push()* instead.
 
 
 
+<a name="ref.notification.close"></a>
 ### Notification#close()
 
 This close the notification right now.
 
 
 
+<a name="ref.limitations"></a>
 ## Limitations
 
-There are many things broken by design in the *org.freedesktop.Notifications* spec, in notification server implementation
-and in the *libnotify* lib itself.
+Sending a notification in a *fire and forget* fashion works pretty well.
 
-(TODO)
+However, advanced feature like button with action callback are utterly broken by design in the *org.freedesktop.Notifications* spec,
+in notification server implementation and ultimately in the *libnotify* lib itself.
 
+**In fact there is absolutely no mechanism signaling notification expiration**. That's it: the notification server can tell you if 
+the user clicked the notification, if a particular button is clicked, or if the user close the notification, **BUT NOT IF THE SERVER
+TIMED OUT YOUR NOTIFICATION!!!** For *fire and forget* it's not important, but if you want to send notifications with buttons, that's
+a real problem: as time pass without any callback triggered, how do we know if the notification is still displayed and the user
+is simply away from keyboard (thus an action callback has still a chance to be triggered) or if the notification has been timed out
+and dismissed by the notification server itself. Having a button triggering action callback **DO** imply a callback for timeout.
+
+Also *libnotify* itself do not expose the event produced by the user closing the notification, but *libnotify-ffi* managed to
+get that information by spawning its own proxy to DBus.
+
+Worse: *libnotify* does not provide an easy way to get our callback response *out of the box*. Internally, *libnotify-ffi* has
+to play catch with some low-level gnome API to spawn a **BLOCKING** *g_main_loop*: **it is done in another thread so we do not
+actually block anything**.
+
+So you should be aware that:
+
+* if you use the lib in the *fire and forget* mode, you are totally safe: it's fast and reliable
+* as soon as you define *one* action callback or even call `Notification#push()` with the *finishCallback*, you are not in the
+  trivial *fire and forget* mode anymore
+* when not in *fire and forget* mode, each notification you send create a new thread (that's still faster than other node libraries
+  that spawn a whole brand new process to exec *notify-send* program, also those libraries does not have the action callback features
+  anyway...)
+* as soon as you add *one* button to your notification, **the urgency level is forced to 'critical'**, because critical notifications
+  *SHOULD* not expire (however, that's depend on the server implementation)
+* because we can't detect notification expiration, *libnotify-ffi* assumes by default that the notification has expired after 10s 
+  for *'low'* and *'normal'* urgency notification, and after 60s for *'critical'* notification: this is important to avoid leaking
+  thread like hell. However this can be overridden by setting `options.timeout` to the appropriate value as the first argument
+  of `Notification#push()`.
+* you can update a *living* notification (i.e: a notification currently displayed), but some server (e.g. Gnome) will remove
+  any existing buttons or buttons about to be created (despite the fact that actions are correctly pushed to DBus)...
+  so you would probably want to close the notification and create a brand new one if that notification involve buttons.
 
