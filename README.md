@@ -83,7 +83,7 @@ One of the four action callbacks will be triggered, then the `.push()` callback.
 
 ## API reference
 
-Table of content:
+**Table of content:**
 
 * [.init()](#ref.init)
 * [.reset()](#ref.reset)
@@ -266,13 +266,14 @@ However, advanced feature like button with action callback are utterly broken by
 in notification server implementation and ultimately in the *libnotify* lib itself.
 
 **In fact there is absolutely no mechanism signaling notification expiration**. That's it: the notification server can tell you if 
-the user clicked the notification, if a particular button is clicked, or if the user close the notification, **BUT NOT IF THE SERVER
-TIMED OUT YOUR NOTIFICATION!!!** For *fire and forget* it's not important, but if you want to send notifications with buttons, that's
-a real problem: as time pass without any callback triggered, how do we know if the notification is still displayed and the user
-is simply away from keyboard (thus an action callback has still a chance to be triggered) or if the notification has been timed out
-and dismissed by the notification server itself. Having a button triggering action callback **DO** imply a callback for timeout.
+the user clicked the notification, if a particular button is clicked, or if the user closed the notification, **BUT NOT IF THE SERVER
+HAS TIMED OUT YOUR NOTIFICATION!!!** For *fire and forget* it's not important, but if you want to send notifications with buttons,
+that's a real problem: as time pass without any callback triggered, how do we know if the notification is still displayed and
+the user is simply away from keyboard (thus an action callback has still a chance to be triggered) or if the notification has
+been timed out and dismissed by the notification server itself. Having a button triggering action callback **DOES** imply a callback
+for timeout.
 
-Also *libnotify* itself do not expose the event produced by the user closing the notification, but *libnotify-ffi* managed to
+Also *libnotify* itself does not expose the event produced by the user closing the notification, but *libnotify-ffi* managed to
 get that information by spawning its own proxy to DBus.
 
 Worse: *libnotify* does not provide an easy way to get our callback response *out of the box*. Internally, *libnotify-ffi* has
