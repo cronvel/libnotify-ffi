@@ -45,9 +45,7 @@ var libnotify = require( '../lib/libnotify.js' ) ;
 
 describe( "..." , function() {
 	
-	it( "..." , function( done ) {
-		
-	} ) ;
+	it( "..." ) ;
 	
 } ) ;
 
