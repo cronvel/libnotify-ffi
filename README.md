@@ -13,6 +13,11 @@ which is super-slow and does not provide all of *libnotify* features, like butto
 This module loads the dynamic library (libnotify.so) and provides bindings for its C functions through node-ffi
 (Foreign Function Interface).
 
+You may want to try another module: [freedesktop-notifications](https://www.npmjs.com/package/freedesktop-notifications)
+([Github page](https://github.com/cronvel/freedesktop-notifications)).
+It achieves the same goal, but it does not rely on *libnotify*, instead it talks directly to *D-Bus*,
+implementing the *Freedesktop.org Notifications* spec.
+
 
 
 ## Getting started!
