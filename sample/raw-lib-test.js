@@ -28,7 +28,7 @@
 
 
 
-var ref = require( 'ref' ) ;
+var ref = require( 'ref-napi' ) ;
 var libnotify = require( '../lib/libnotify.js' ) ;
 
 
